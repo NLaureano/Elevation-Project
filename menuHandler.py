@@ -1,5 +1,4 @@
 import coordinateHandler as ch
-
 def createNewMap():
   print("Creating new map...")
   print("Please enter the first coordinate")
