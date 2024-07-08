@@ -1,0 +1,112 @@
+from re import error
+import requests
+import json
+
+#A coordinatePoint is a basic object that can store lat and long values
+class coordinatePoint:
+  def __init__(self, lat, long):
+    self.lat = lat
+    self.long = long
+    self.isNorth = True if self.lat > 0 else False
+    self.isEast = True if self.long > 0 else False
+  def __str__(self):
+    return "Lat: " + str(self.lat) + " Long: " + str(self.long)
+  def getLat(self):
+    return self.lat
+  def getLong(self):
+    return self.long
+
+#A elevationPoint extends coordinatePoint and can store elevation as well
+#Defaults elevation value to -1 if not provided
+class elevationPoint(coordinatePoint):
+  def __init__(self, lat, long, elev=-1):
+    super().__init__(lat, long)
+    if elev != -1:
+      self.elev = elev
+    else:
+      self.elev = -1
+    
+  def __str__(self):
+    return "Lat: " + str(self.lat) + " Long: " + str(self.long) + " Elev: " + str(self.elev)
+    
+  def getElev(self):
+    return self.elev
+    
+  def setElev(self, elev):
+    self.elev = elev
+
+
+class cordMap:
+  def __init__(self, coordinatePoint1, coordinatePoint2, accuracy):
+    if accuracy < 0:
+      raise error("Accuracy must be greater than or equal to 0")
+    if coordinatePoint1.getLat() > coordinatePoint2.getLat():
+      self.latMax = coordinatePoint1.getLat()
+      self.latMin = coordinatePoint2.getLat()
+      self.is2dLat = False
+    elif coordinatePoint1.getLat() < coordinatePoint2.getLat():
+      self.latMax = coordinatePoint2.getLat()
+      self.latMin = coordinatePoint1.getLat()
+      self.is2dLat = False
+    else:
+      self.latMax = coordinatePoint1.getLat()
+      self.latMin = coordinatePoint1.getLat()
+      self.is2dLat = True
+    if coordinatePoint1.getLong() > coordinatePoint2.getLong():
+      self.longMax = coordinatePoint1.getLong()
+      self.longMin = coordinatePoint2.getLong()
+      self.is2dLong = False
+    elif coordinatePoint1.getLong() < coordinatePoint2.getLong():
+      self.longMax = coordinatePoint2.getLong()
+      self.longMin = coordinatePoint1.getLong()
+      self.is2dLong = False
+    else:
+      self.longMax = coordinatePoint1.getLong()
+      self.longMin = coordinatePoint1.getLong()
+      self.is2dLong = True
+
+    self.latDistance = self.latMax - self.latMin
+    self.longDistance = self.longMax - self.longMin
+    self.sizeOfGrid = accuracy + 2
+    self.grid = [[elevationPoint(-1, -1) for _ in range(self.sizeOfGrid)] for _ in range(self.sizeOfGrid)]
+  #initGrid updates the grid's lat and long values to their respective values
+  #ADD: THIS FUNCTION SHOULD ALSO INIT ELEVATIONS BUT DOESNT YET
+  def initGrid(self):
+    for i in range(self.sizeOfGrid):
+      for j in range(self.sizeOfGrid):
+        setLatValue = self.latMin + (i * self.latDistance / (self.sizeOfGrid - 1))
+        setLongValue = self.longMin + (j * self.longDistance / (self.sizeOfGrid - 1))
+        self.grid[i][j] = elevationPoint(setLatValue, setLongValue) 
+  #printGridLats prints the grid lat values
+  def printGridLats(self):
+    for i in range(0, self.sizeOfGrid):
+      for j in range(0, self.sizeOfGrid):
+        print(self.grid[i][j].getLat(), end=' ')
+      print("\n")
+  #printGridLongs prints the grid long values
+  def printGridLongs(self):
+    for i in range(0, self.sizeOfGrid):
+      for j in range(0, self.sizeOfGrid):
+        print(self.grid[i][j].getLong(), end=' ')
+      print("\n")
+  #printGridElevations prints the grid elevations
+  def printGridElevations(self):
+    for i in range(0, self.sizeOfGrid):
+      for j in range(0, self.sizeOfGrid):
+        print(self.grid[i][j].getElev(), end=' ')
+      print("\n")
+  #printGrid prints all elevations along with headers for lat and longs
+  #This should be used in place of any other print function for most cases
+  def printGrid(self):
+    print("GRID", end=' ')
+    for header in range(0, self.sizeOfGrid):
+      print(self.grid[0][header].getLong(), end=' ')
+    print("\n")
+    for i in range(0, self.sizeOfGrid):
+      print(self.grid[i][0].getLat(), end=' ')
+      for j in range(0, self.sizeOfGrid):
+        currentPoint = self.grid[i][j]
+        print(currentPoint.getElev(), end=' ')
+      print("\n")
+  
+    
