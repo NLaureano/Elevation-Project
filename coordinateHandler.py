@@ -77,7 +77,7 @@ class cordMap:
   def initGrid(self):
     for i in range(self.sizeOfGrid):
       for j in range(self.sizeOfGrid):
-        setLatValue = round(self.latMin + (i * self.latDistance / (self.sizeOfGrid - 1)), 6)
+        setLatValue = round(self.latMax - (i * self.latDistance / (self.sizeOfGrid - 1)), 6)
         setLongValue = round(self.longMin + (j * self.longDistance / (self.sizeOfGrid - 1)), 6)
         self.grid[i][j] = elevationPoint(setLatValue, setLongValue) 
         if i == 0:
