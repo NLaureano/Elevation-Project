@@ -3,6 +3,13 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#replit stuff
+*.lock
+*.toml
+*.nix
+*.breakpoints
+*.replit
+
 # C extensions
 *.so
 
