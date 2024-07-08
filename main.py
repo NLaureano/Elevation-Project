@@ -8,6 +8,7 @@ print("This program takes in two cordinates and plots the elevation of the point
 while programRunning:
   print("1: Create New Map")
   print("2: Load Map")
+  print("3 DEBUG")
   print("Q: Quit")
   choice = input("Enter your choice: ")
   match choice:
@@ -15,6 +16,8 @@ while programRunning:
       mh.createNewMap()
     case "2":
       print("Listing maps...")
+    case "3":
+      mh.runTests()
     case "Q":
       print("Closing Program...")
       programRunning = False

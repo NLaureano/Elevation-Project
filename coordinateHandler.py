@@ -37,9 +37,10 @@ class elevationPoint(coordinatePoint):
 
 
 class cordMap:
-  def __init__(self, coordinatePoint1, coordinatePoint2, accuracy):
+  def __init__(self, coordinatePoint1, coordinatePoint2, accuracy, mapName):
     if accuracy < 0:
       raise error("Accuracy must be greater than or equal to 0")
+    self.mapName = mapName
     if coordinatePoint1.getLat() > coordinatePoint2.getLat():
       self.latMax = coordinatePoint1.getLat()
       self.latMin = coordinatePoint2.getLat()
@@ -68,15 +69,21 @@ class cordMap:
     self.latDistance = self.latMax - self.latMin
     self.longDistance = self.longMax - self.longMin
     self.sizeOfGrid = accuracy + 2
+    self.lats = [-1] * self.sizeOfGrid
+    self.longs = [-1] * self.sizeOfGrid
     self.grid = [[elevationPoint(-1, -1) for _ in range(self.sizeOfGrid)] for _ in range(self.sizeOfGrid)]
   #initGrid updates the grid's lat and long values to their respective values
-  #ADD: THIS FUNCTION SHOULD ALSO INIT ELEVATIONS BUT DOESNT YET
+  # This also initializes the lat and long arrays for debugging
   def initGrid(self):
     for i in range(self.sizeOfGrid):
       for j in range(self.sizeOfGrid):
-        setLatValue = self.latMin + (i * self.latDistance / (self.sizeOfGrid - 1))
-        setLongValue = self.longMin + (j * self.longDistance / (self.sizeOfGrid - 1))
+        setLatValue = round(self.latMin + (i * self.latDistance / (self.sizeOfGrid - 1)), 6)
+        setLongValue = round(self.longMin + (j * self.longDistance / (self.sizeOfGrid - 1)), 6)
         self.grid[i][j] = elevationPoint(setLatValue, setLongValue) 
+        if i == 0:
+          self.longs[j] = setLongValue
+        if j == 0:
+          self.lats[i] = setLatValue
   #printGridLats prints the grid lat values
   def printGridLats(self):
     for i in range(0, self.sizeOfGrid):
@@ -108,5 +115,36 @@ class cordMap:
         currentPoint = self.grid[i][j]
         print(currentPoint.getElev(), end=' ')
       print("\n")
+
   
+  def printEdges(self):
+    for i in range(0, self.sizeOfGrid):
+      print(self.lats[i], end=' ')
+    print("\n")
+    for j in range(0, self.sizeOfGrid):
+      print(self.longs[j], end=' ')
+    print("\n")
+
+  
+  def initElevations(self):
+    print("Generating JSON file...")
+    url = "https://api.open-elevation.com/api/v1/lookup?locations="
+    fileToSend = {"locations": []}
+    for i in range(0, self.sizeOfGrid):
+      for j in range(0, self.sizeOfGrid):
+        currentPoint = self.grid[i][j]
+        fileToSend["locations"].append({"latitude": currentPoint.getLat(), "longitude":currentPoint.getLong()})
+    #jsonifiedFileToSend = json.dumps(fileToSend) #DEBUGGING PURPOSES ONLY
+    #print(jsonifiedFileToSend)
+    print("Contacting Database...")
+    response = requests.post(url, json=fileToSend)
+    print("Data Recieved... Parsing...")
+    #print(response.json())
+    data = response.json()
+    for i in range(len(data["results"])):
+      databit = data["results"][i]
+      self.grid[i // self.sizeOfGrid][i % self.sizeOfGrid].setElev(int(databit["elevation"]))
+    self.printEdges()
+    print("Elevations Generated! Feel free to printGrid")
+
     
