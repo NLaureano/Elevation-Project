@@ -1,7 +1,7 @@
-
+import gridStorageHandler as gsh
 import coordinateHandler as ch
 
-def createNewMap():
+def createNewMap(gridStorage):
   print("Creating new map...")
   mapName = input("Enter a name for your map (Leave Blank for default): ")
   if mapName == '':
@@ -13,10 +13,18 @@ def createNewMap():
   print("Please enter the accuracy of the map")
   accuracy = int(input("Accuracy: "))
   newMap = ch.cordMap(firstCoordinate, secondCoordinate, accuracy, mapName)
+  gridStorage.addGrid(newMap)
+  mapName = gridStorage.getLastGridAdded()
   newMap.initGrid()
-  newMap.printGrid()
+  #newMap.printGrid() prints without elevation data
   newMap.initElevations()
-  newMap.printGrid()
+  print("Map Created! Saved as:" + mapName + " Feel free to load it")
+
+def loadMaps(gridStorage):
+  print("Loading Maps...")
+  gridStorage.printGrids()
+  mapName = input("Enter the name of the map you want to load: ")
+  gridStorage.getGrid(mapName).printGrid()
 
 def runTests():
   print("Running tests...")

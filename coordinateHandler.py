@@ -2,6 +2,7 @@ from re import error
 import requests
 import json
 
+
 #A coordinatePoint is a basic object that can store lat and long values
 class coordinatePoint:
   def __init__(self, lat, long):
@@ -72,6 +73,9 @@ class cordMap:
     self.lats = [-1] * self.sizeOfGrid
     self.longs = [-1] * self.sizeOfGrid
     self.grid = [[elevationPoint(-1, -1) for _ in range(self.sizeOfGrid)] for _ in range(self.sizeOfGrid)]
+    
+  def getName(self):
+    return self.mapName
   #initGrid updates the grid's lat and long values to their respective values
   # This also initializes the lat and long arrays for debugging
   def initGrid(self):

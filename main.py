@@ -1,9 +1,11 @@
 import matplotlib.pyplot as plt
 import menuHandler as mh
+import gridStorageHandler as gsh
 #response = requests.get("https://api.open-elevation.com/api/v1/lookup?locations=10,10|11,11|12,12|13,13|14,14|15,15|16,16|17,17")
 #print(response.json())
 # Plot the data 
 programRunning = True
+gridStorage = gsh.gridStorage()
 print("This program takes in two cordinates and plots the elevation of the point on a 3D graph")
 while programRunning:
   print("1: Create New Map")
@@ -13,9 +15,9 @@ while programRunning:
   choice = input("Enter your choice: ")
   match choice:
     case "1":
-      mh.createNewMap()
+      mh.createNewMap(gridStorage)
     case "2":
-      print("Listing maps...")
+      mh.loadMaps(gridStorage)
     case "3":
       mh.runTests()
     case "Q":
