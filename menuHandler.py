@@ -19,6 +19,7 @@ def createNewMap(gridStorage):
   #newMap.printGrid() prints without elevation data
   newMap.initElevations()
   print("Map Created! Saved as:" + mapName + " Feel free to load it")
+  newMap.Visualize()
 
 def loadMaps(gridStorage):
   print("Loading Maps...")

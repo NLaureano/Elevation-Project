@@ -1,6 +1,8 @@
 from re import error
 import requests
-import json
+import matplotlib.pyplot as plt
+import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
 
 
 #A coordinatePoint is a basic object that can store lat and long values
@@ -151,4 +153,28 @@ class cordMap:
     self.printEdges()
     print("Elevations Generated! Feel free to printGrid")
 
+  def Visualize(self):
+    print("Generating Visualization...")
+    self.fig = plt.figure()
+    ax = self.fig.add_subplot(111, projection='3d')
+    ax.set_xlabel('Latitude')
+    ax.set_ylabel('Longitude')
+    ax.set_zlabel('Elevation')
+    graphLats = []
+    graphLongs = []
+    graphElevations = []
+    bottom = np.zeros((self.sizeOfGrid * self.sizeOfGrid))
+    for i in range(0, self.sizeOfGrid):
+      for j in range(0, self.sizeOfGrid):
+        currentPoint = self.grid[i][j]
+        graphLats.append(currentPoint.getLat())
+        graphLongs.append(currentPoint.getLong())
+        graphElevations.append(currentPoint.getElev())
+    graphLats = np.array(graphLats)
+    graphLongs = np.array(graphLongs)
+    bottom = np.zeros((self.sizeOfGrid * self.sizeOfGrid))
+    width = np.array([self.latDistance / (self.sizeOfGrid - 1)]*self.sizeOfGrid*self.sizeOfGrid)
+    depth = np.array([self.longDistance / (self.sizeOfGrid - 1)]*self.sizeOfGrid*self.sizeOfGrid)
     
+    ax.bar3d(graphLats, graphLongs, bottom, width, depth, graphElevations)
+    plt.show()
