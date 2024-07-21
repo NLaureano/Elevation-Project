@@ -157,8 +157,8 @@ class cordMap:
     print("Generating Visualization...")
     self.fig = plt.figure()
     ax = self.fig.add_subplot(111, projection='3d')
-    ax.set_xlabel('Latitude')
-    ax.set_ylabel('Longitude')
+    ax.set_xlabel('Longitude')
+    ax.set_ylabel('Latitude')
     ax.set_zlabel('Elevation')
     graphLats = []
     graphLongs = []
@@ -176,5 +176,5 @@ class cordMap:
     width = np.array([self.latDistance / (self.sizeOfGrid - 1)]*self.sizeOfGrid*self.sizeOfGrid)
     depth = np.array([self.longDistance / (self.sizeOfGrid - 1)]*self.sizeOfGrid*self.sizeOfGrid)
     
-    ax.bar3d(graphLats, graphLongs, bottom, width, depth, graphElevations)
+    ax.bar3d(graphLongs, graphLats, bottom, width, depth, graphElevations)
     plt.show()
