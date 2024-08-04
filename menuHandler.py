@@ -84,3 +84,15 @@ def runTests():
   testMap.initElevations()
   print("Elevations Initialized... PASSED")
   testMap.printGrid()
+
+def calcDistance():
+  print("Please enter 2 coordinates")
+  lat1 = input("Enter Latitude 1: ")
+  long1 = input("Enter Longitude 1: ")
+  lat2 = input("Enter Latitude 2: ")
+  long2 = input("Enter Longitude 2: ")
+  firstCoordinate = ch.coordinatePoint(float(lat1), float(long1))
+  secondCoordinate = ch.coordinatePoint(float(lat2), float(long2))
+  result = firstCoordinate.calcDistanceTo(secondCoordinate)
+  print("The distance between the two coordinates is: " + str(result))
+  

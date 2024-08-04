@@ -11,6 +11,7 @@ while programRunning:
   print("1: Create New Map")
   print("2: Load Map")
   print("3 DEBUG")
+  print("4 Calculate Distances W/ Coordinates")
   print("Q: Quit")
   choice = input("Enter your choice: ")
   match choice:
@@ -20,6 +21,8 @@ while programRunning:
       mh.loadMaps(gridStorage)
     case "3":
       mh.runTests()
+    case "4":
+      mh.calcDistance()
     case "Q":
       print("Closing Program...")
       programRunning = False

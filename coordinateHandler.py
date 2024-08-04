@@ -18,7 +18,19 @@ class coordinatePoint:
     return self.lat
   def getLong(self):
     return self.long
-
+  def calcDistanceTo(self, other):
+    earthRadius = 6378000 #In meters
+    lat1 = self.lat
+    long1 = self.long
+    lat2 = other.getLat() 
+    long2 = other.getLong()
+    latDifference = (lat2 - lat1)/2
+    longDifference = (long2 - long1) / 2
+    a = np.square(np.sin(latDifference)) + (np.cos(lat1) * np.cos(lat2) * np.square(np.sin(longDifference)))
+    sqrtA = np.sqrt(a)
+    result = (2 * earthRadius) * np.arcsin(sqrtA)
+    return str(result)
+    
 #A elevationPoint extends coordinatePoint and can store elevation as well
 #Defaults elevation value to -1 if not provided
 class elevationPoint(coordinatePoint):
